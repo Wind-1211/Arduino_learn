@@ -1,0 +1,12 @@
+//Arduino 程序由 setup() 和 loop() 两个函数组成。setup() 上电后只执行一次，用来初始化引脚和串口；loop() 会反复执行，用来读输入、做判断、控制输出。每条语句以分号结尾，一对花括号表示一个代码块。
+示例：
+void setup() {
+  pinMode(13, OUTPUT);
+}
+ 
+void loop() {
+  digitalWrite(13, HIGH);
+  delay(500);
+  digitalWrite(13, LOW);
+  delay(500);
+}
