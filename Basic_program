@@ -21,3 +21,75 @@ const uint8_t LED_PIN = 2;
 const uint8_t PINS[3] = {2, 3, 4};
 uint16_t waitTime = 500;
 
+三、条件判断
+if 用来根据条件选择执行哪一段。比较两个值是否相等用 ==，一个等号 = 是赋值。
+if (c == '1') {
+  digitalWrite(2, HIGH);
+} else if (c == '2') {
+  digitalWrite(3, HIGH);
+} else {
+  digitalWrite(2, LOW);
+  digitalWrite(3, LOW);
+}
+&& 表示“并且”，|| 表示“或者”，! 表示“取反”。例如 c >= '1' && c <= '9' 表示字符 c 在 '1' 到 '9' 之间。
+
+
+四、循环
+for 适合已知重复次数的场合。括号里三部分：初始化、继续条件、每轮结束后的变化。
+for (uint8_t i = 0; i < 3; i++) {
+  digitalWrite(PINS[i], HIGH);
+  delay(300);
+  digitalWrite(PINS[i], LOW);
+}
+i 依次取 0、1、2；当 i 变成 3 时，条件 3 < 3 不成立，循环结束。这段代码让 3 个 LED 依次亮 300 毫秒。
+
+
+五、数字输入输出
+常用函数：
+— pinMode(pin, mode)：设置引脚为输入还是输出，OUTPUT 表示输出。
+— digitalWrite(pin, value)：输出高电平 HIGH 或低电平 LOW。
+— digitalRead(pin)：读引脚电平，返回 HIGH 或 LOW。
+LED 接线：Arduino 引脚接 220 Ω 电阻，再接 LED 长脚（阳极），LED 短脚（阴极）接 GND。接反了不亮，先检查极性和电阻。
+注意：Uno 的 D0、D1 是串口 RX、TX，下载程序和串口通信用得到，做电极控制时尽量从 D2 开始。
+
+
+六、串口
+串口用来和电脑通信。Serial.begin(9600) 打开串口，波特率 9600；Serial.available() 判断有没有数据；Serial.read() 读一个字符；Serial.print() 输出不换行，Serial.println() 输出并换行。
+void setup() {
+  Serial.begin(9600);
+}
+ 
+void loop() {
+  if (Serial.available()) {
+    char c = Serial.read();
+    Serial.print("received: ");
+    Serial.println(c);
+  }
+}
+读之前一定先判断 Serial.available()，否则没有数据时 read() 会返回 -1。串口监视器的波特率要和 Serial.begin() 一致，不然会看到乱码。
+
+七、时间：delay 和 millis
+delay(500) 表示停在这里等 500 毫秒。在这段时间里，程序不会读串口，也不会响应其他操作，所以它不适合做“暂停/停止”。
+millis() 返回开机到现在的毫秒数，不会停住程序。用“当前时间减去上次时间”的判断，可以实现非阻塞的定时。
+unsigned long last = 0;
+ 
+void loop() {
+  if (millis() - last >= 500) {
+    last = millis();
+    digitalWrite(13, !digitalRead(13));
+  }
+}
+这段代码每 500 毫秒翻转一次 13 号引脚，同时 loop() 还能继续做别的事。
+八、函数
+函数是把一段代码起个名字，定义一次，可以在别处反复调用。void 表示没有返回值；括号里的 index 是参数。
+void allOff() {
+  for (uint8_t i = 0; i < 3; i++) {
+    digitalWrite(PINS[i], LOW);
+  }
+}
+ 
+void selectOne(uint8_t index) {
+  allOff();
+  digitalWrite(PINS[index], HIGH);
+}
+调用 allOff() 会执行里面的循环；调用 selectOne(0) 会先全关，再打开 PINS[0]。函数要先定义再调用，或者在前面写函数声明。
