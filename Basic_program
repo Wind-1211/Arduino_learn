@@ -1,4 +1,4 @@
-//Arduino 程序由 setup() 和 loop() 两个函数组成。setup() 上电后只执行一次，用来初始化引脚和串口；loop() 会反复执行，用来读输入、做判断、控制输出。每条语句以分号结尾，一对花括号表示一个代码块。
+Arduino 程序由 setup() 和 loop() 两个函数组成。setup() 上电后只执行一次，用来初始化引脚和串口；loop() 会反复执行，用来读输入、做判断、控制输出。每条语句以分号结尾，一对花括号表示一个代码块。
 示例：
 void setup() {
   pinMode(13, OUTPUT);
@@ -10,3 +10,14 @@ void loop() {
   digitalWrite(13, LOW);
   delay(500);
 }
+
+二、变量、常量、数组
+变量是给数据起名字。常用的几种：
+— int：整数，可修改；在 Arduino Uno 上占 2 字节。
+— uint8_t：0 到 255 的无符号整数，适合引脚号和数组下标。
+— uint16_t：0 到 65535 的无符号整数，适合毫秒延时。
+— const：只读，定义后不能再改，用来防止误改。
+const uint8_t LED_PIN = 2;
+const uint8_t PINS[3] = {2, 3, 4};
+uint16_t waitTime = 500;
+
